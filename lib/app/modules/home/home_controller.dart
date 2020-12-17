@@ -1,22 +1,24 @@
 import 'package:mobx/mobx.dart';
-import 'package:slidy_flutter/app/modules/home/repositories/poke_repository.dart';
-import 'package:slidy_flutter/app/shared/models/pokemon_model.dart';
+
+import 'models/pokemon_model.dart';
+import 'repositories/poke_repository.dart';
+
 part 'home_controller.g.dart';
 
 class HomeController = _HomeControllerBase with _$HomeController;
 
 abstract class _HomeControllerBase with Store {
-  final PokeRepository repository;
+  final PokeRepository pokeRepository;
 
-  @observable
-  ObservableFuture<List<PokemonModel>> pokemons;
-
-  _HomeControllerBase(this.repository) {
-    fetchPokemon();
+  _HomeControllerBase(this.pokeRepository) {
+    fetchPokemons();
   }
 
   @action
-  fetchPokemon() {
-    pokemons = repository.getAllPokemon().asObservable();
+  fetchPokemons() {
+    pokemons = pokeRepository.getAllPokemons().asObservable();
   }
+
+  @observable
+  ObservableFuture<List<PokemonModel>> pokemons;
 }
