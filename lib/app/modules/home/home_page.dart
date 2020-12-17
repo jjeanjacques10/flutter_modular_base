@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:slidy_flutter/app/modules/home/home_controller.dart';
+
+import 'home_controller.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -19,39 +18,35 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: Observer(
-        builder: (_) {
-          if (homeController.pokemons.error != null) {
-            return Center(
-              child: RaisedButton(
-                child: Text('Buscar Pokemons'),
-                onPressed: () {
-                  homeController.fetchPokemon();
-                },
-              ),
-            );
-          }
+      body: Observer(builder: (BuildContext context) {
+        if (homeController.pokemons.error != null) {
+          return Center(
+            child: FlatButton(
+              onPressed: () {
+                homeController.fetchPokemons();
+              },
+              child: Text('Recarregar Pokemon'),
+            ),
+          );
+        }
+        if (homeController.pokemons.value == null) {
+          return Center(child: CircularProgressIndicator());
+        }
+        var list = homeController.pokemons.value;
 
-          if (homeController.pokemons.value == null) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          var list = homeController.pokemons.value;
-
-          return ListView.builder(
-              itemCount: list.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(list[index].name),
-                );
-              });
-        },
-      ),
+        return ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text(list[index].name),
+              );
+            });
+      }),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {},
+        child: Icon(Icons.arrow_right),
+        onPressed: () {
+          //Modular.to.pushNamed('');
+        },
       ),
     );
   }
